@@ -28,11 +28,17 @@ interface Food {
 }
 
 const Orders: React.FC = () => {
-  const [orders, setOrders] = useState<Food[]>([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     async function loadOrders(): Promise<void> {
-      // Load orders from API
+      const { data } = await api.get(`/orders`);
+      setOrders(
+        data.map((food: Food) => ({
+          ...food,
+          formattedPrice: formatValue(food.price),
+        })),
+      );
     }
 
     loadOrders();
